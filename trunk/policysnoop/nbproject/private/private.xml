@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/ExecutionStack.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Grant.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/GrantPanel.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Jeff.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Perm.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PermPanel.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PolicyGUI.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PolicyListener.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PolicyModel.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PolicyPanel.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/PolicySnoop.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Runner.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/RunnerThread.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/SnoopManager.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Test.java</file>
+        <file>file:/Users/stephen/data/dev/owasp/policysnoop/src/org/owasp/java/policysnoop/Test2.java</file>
+    </open-files>
+</project-private>

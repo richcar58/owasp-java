@@ -28,11 +28,9 @@ public class DBLogin extends SimpleLogin {
     protected String                roleTable;
     protected String                where;
     
-    protected synchronized Vector validateUser(String username, char password[]) throws LoginException {
-        return (validateUserAgainstDatabase(username, password));
-    }
     
-    protected synchronized Vector validateUserAgainstDatabase(String username, char password[]) throws LoginException{
+    
+    protected synchronized Vector validateUser(String username, char password[]) throws LoginException{
         ResultSet rsu = null, rsr = null;
         Connection con = null;
         PreparedStatement psu = null, psr = null;

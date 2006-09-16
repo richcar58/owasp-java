@@ -11,7 +11,10 @@ package org.owasp.java.jaas;
 
 import javax.security.auth.login.LoginContext;
 import com.tagish.auth.test.PasswordCallbackHandler;
+import com.tagish.auth.test.LoginCallbackHandler;
 import com.tagish.auth.Utils;
+import java.sql.SQLException;
+import javax.security.auth.login.FailedLoginException;
 
 /**
  *
@@ -27,17 +30,31 @@ public class Standalone {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        try {
-            System.out.println(Utils.cryptPassword((new String("password")).toCharArray()));
-            LoginContext lc = new LoginContext("Example", new PasswordCallbackHandler("bob", "password"));
-            //LoginContext lc = new LoginContext("Example", new LoginCallbackHandler());
-            lc.login();
-            System.out.println("Login");
-        } catch (Exception e) {
-            System.out.println("Error logging in");
-            e.printStackTrace();
+        boolean loggedIn = false;
+        int count=0;
+        while ((!loggedIn) && (count<10)) {
+            try {
+                
+                //LoginContext lc = new LoginContext("Example", new PasswordCallbackHandler("bob", "1password"));
+                LoginContext lc = new LoginContext("Example", new LoginCallbackHandler());
+                lc.login();
+                System.out.println("Login successful");
+            } catch (Exception e) {
+                System.out.println("Error logging in");
+                e.printStackTrace();
+            }
+            count++;
         }
+        try {
+                
+                LoginContext lc = new LoginContext("Example", new PasswordCallbackHandler("bob", "password"));
+                //LoginContext lc = new LoginContext("Example", new LoginCallbackHandler());
+                lc.login();
+                System.out.println("Login successful");
+            } catch (Exception e) {
+                System.out.println("Error logging in");
+                e.printStackTrace();
+            }
     }
     
 }

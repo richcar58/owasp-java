@@ -4,8 +4,13 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
         <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/build.xml</file>
         <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/login.test.conf</file>
+        <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/src/com/tagish/auth/DBLogin.java</file>
+        <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/src/com/tagish/auth/SimpleLogin.java</file>
         <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/src/org/owasp/java/jaas/Standalone.java</file>
         <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/src/org/owasp/java/jaas/TimedLogin.java</file>
+        <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/src/org/owasp/java/jaas/sample/SampleAction.java</file>
+        <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/test.security.policy</file>
+        <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/test/org/owasp/java/jaas/loginmodule/test/AuthorisationTest.java</file>
         <file>file:/Users/stephen/data/src/owasp-java/OWASPJaasLoginModule/test/org/owasp/java/jaas/loginmodule/test/LoginModuleTest.java</file>
     </open-files>
 </project-private>

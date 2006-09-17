@@ -100,8 +100,12 @@ public class TimedLogin extends DBLogin {
             }           
             
         } catch (ClassNotFoundException e) {
+            System.out.println("SQL ERROR 1");
+            e.printStackTrace();
             throw new LoginException("Error reading database (" + e.getMessage() + ")");
         } catch (SQLException e) {
+            System.out.println("SQL ERROR");
+            e.printStackTrace();
             throw new LoginException("Error reading database (" + e.getMessage() + ")");
         } finally {
             try {

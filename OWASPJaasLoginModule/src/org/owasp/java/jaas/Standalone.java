@@ -10,11 +10,12 @@
 package org.owasp.java.jaas;
 
 import javax.security.auth.login.LoginContext;
-import com.tagish.auth.test.PasswordCallbackHandler;
 import com.tagish.auth.test.LoginCallbackHandler;
-import com.tagish.auth.Utils;
-import java.sql.SQLException;
-import javax.security.auth.login.FailedLoginException;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.util.Iterator;
+import javax.security.auth.Subject;
+import org.owasp.java.jaas.sample.SampleAction;
 
 /**
  *
@@ -31,30 +32,41 @@ public class Standalone {
      */
     public static void main(String[] args) {
         boolean loggedIn = false;
-        int count=0;
-        while ((!loggedIn) && (count<10)) {
-            try {
-                
-                //LoginContext lc = new LoginContext("Example", new PasswordCallbackHandler("bob", "1password"));
-                LoginContext lc = new LoginContext("Example", new LoginCallbackHandler());
+        LoginContext lc=null;
+        System.out.println("Enter your username and password");
+        
+        while (!loggedIn) {
+            try {                
+                lc = new LoginContext("Example", new LoginCallbackHandler());
                 lc.login();
-                System.out.println("Login successful");
+                loggedIn = true;
             } catch (Exception e) {
                 System.out.println("Error logging in");
                 e.printStackTrace();
             }
-            count++;
+
         }
-        try {
-                
-                LoginContext lc = new LoginContext("Example", new PasswordCallbackHandler("bob", "password"));
-                //LoginContext lc = new LoginContext("Example", new LoginCallbackHandler());
-                lc.login();
-                System.out.println("Login successful");
-            } catch (Exception e) {
-                System.out.println("Error logging in");
-                e.printStackTrace();
-            }
+        System.out.println("Authentication succeeded!");
+
+	Subject mySubject = lc.getSubject();
+
+	// let's see what Principals we have
+	Iterator principalIterator = mySubject.getPrincipals().iterator();
+	System.out.println("Authenticated user has the following Principals:");
+	while (principalIterator.hasNext()) {
+	    Principal p = (Principal)principalIterator.next();
+	    System.out.println("\t" + p.toString());
+	}
+
+	System.out.println("User has " +
+			mySubject.getPublicCredentials().size() +
+			" Public Credential(s)");
+
+	// now try to execute the SampleAction as the authenticated Subject
+	PrivilegedAction action = new SampleAction();
+	Subject.doAsPrivileged(mySubject, action, null);
+	System.exit(0);
+        
     }
     
 }

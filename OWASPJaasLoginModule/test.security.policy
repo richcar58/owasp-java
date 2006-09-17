@@ -1,0 +1,30 @@
+
+grant codebase "file:./build/-" {
+   permission javax.security.auth.AuthPermission "*";
+   permission java.net.SocketPermission "*","connect,accept,resolve";
+   permission java.io.FilePermission "jaastestdb.xml", "read";
+};
+
+
+grant codebase "file:/usr/local/hsqldb/lib/hsqldb.jar" {
+   permission java.security.AllPermission;
+};
+
+grant codebase "file:/usr/local/javalibs/dbunit-2.1/dbunit-2.1.jar" {
+   permission java.security.AllPermission;
+};
+
+grant codebase "file:/Developer/Applications/NetBeans.app/Contents/Resources/NetBeans/ide7/-" {
+   permission java.security.AllPermission;
+};
+
+
+grant codebase "file:./build/classes/-", Principal com.tagish.auth.TypedPrincipal "User" {
+
+   permission java.io.FilePermission "user.txt", "read";
+};
+
+grant codebase "file:./build/test/-", Principal com.tagish.auth.TypedPrincipal "Admin" {
+
+   permission java.io.FilePermission "admin.txt", "read";
+};

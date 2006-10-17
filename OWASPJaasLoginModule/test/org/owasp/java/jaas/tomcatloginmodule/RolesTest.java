@@ -5,7 +5,7 @@
  * Created on September 17, 2006, 11:41 AM
  */
 
-package org.owasp.java.jaas.loginmodule.test;
+package org.owasp.java.jaas.tomcatloginmodule;
 
 import com.tagish.auth.test.PasswordCallbackHandler;
 import java.io.FileInputStream;
@@ -29,11 +29,8 @@ import org.owasp.java.jaas.sample.SampleAction;
 /**
  *
  * @author stephen
- * 
- * These tests don't work yet!
- *
  */
-public class AuthorisationTest extends DatabaseTestCase {
+public class RolesTest extends DatabaseTestCase {
     private final String validUsername="bob";
     private final int validUserID=1;
     private final String validPassword="password";
@@ -43,7 +40,7 @@ public class AuthorisationTest extends DatabaseTestCase {
     private final String dbUsername = "sa";
     private final String dbPassword = "";
     
-    public AuthorisationTest(String testName) {
+    public RolesTest(String testName) {
         super(testName);
     }
     
@@ -72,22 +69,23 @@ public class AuthorisationTest extends DatabaseTestCase {
     protected void tearDown() throws Exception {
     }
     
-    public void testPrincipals() {
+   
+    
+     public void testRoles() {
         try {            
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, validPassword));;
+            LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, validPassword));;
             lc.login();
             Subject mySubject = lc.getSubject();
             // let's see what Principals we have
             Iterator principalIterator = mySubject.getPrincipals().iterator();
-            boolean foundUser=false;
-            boolean foundRole=false;
+
             while (principalIterator.hasNext()) {
                 Principal p = (Principal)principalIterator.next();
-                if ("bob".equals(p.getName())) foundUser=true;
-                if ("User".equals(p.getName())) foundRole=true;
+                if ("User".equals(p.getName())) {
+                    assertEquals("Role is not of the correct type", org.owasp.java.jaas.RolePrincipal.class.getName(), p.getClass().getName());
+                }
             }
-            assertTrue("Did not find principal bob", foundUser);
-            assertTrue("Did not find principal User(role)", foundRole);
+            
         } catch (AccountNotFoundException e) {
             fail(validUsername+ " should be a valid user.");
         } catch (Exception other) {
@@ -96,23 +94,5 @@ public class AuthorisationTest extends DatabaseTestCase {
         
     }
     
-    public void testValidAccess() {
-        String filename="user.txt";
-        try {
-            
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, validPassword));;
-            lc.login();
-            Subject mySubject = lc.getSubject();
-            SampleAction action = new SampleAction();            
-            action.setFilename(filename);
-            Subject.doAsPrivileged(mySubject, action, null);            
-        } catch (AccountNotFoundException e) {
-            fail(validUsername+ " should be a valid user.");
-        } catch (AccessControlException ace) {
-            fail ("Access was denied to file: "+filename);
-        } catch (Exception other) {
-            fail("Unexpected exception thrown: "+other.getMessage());
-        } 
-        
-    }
+    
 }

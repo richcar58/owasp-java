@@ -19,11 +19,11 @@ import javax.security.auth.spi.*;
  */
 public abstract class SimpleLogin extends BasicLogin
 {
-	protected Vector			principals      = null;
-	protected Vector            pending         = null;
+	protected Vector	principals      = null;
+	protected Vector        pending         = null;
 
 	// the authentication status
-	protected boolean			commitSucceeded = false;
+	protected boolean	commitSucceeded = false;
 
 	/**
 	 * Validate a user's credentials and either throw a LoginException (if

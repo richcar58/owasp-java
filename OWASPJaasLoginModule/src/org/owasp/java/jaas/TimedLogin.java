@@ -10,6 +10,7 @@ package org.owasp.java.jaas;
 import com.tagish.auth.DBLogin;
 import com.tagish.auth.TypedPrincipal;
 import com.tagish.auth.Utils;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,9 +18,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.AccountLockedException;
@@ -32,8 +34,11 @@ import javax.security.auth.login.LoginException;
  */
 public class TimedLogin extends DBLogin {
     private String loginTable;
+    private String loginQuery;
+    private String rolesQuery;
     private int clippingLevel=0;
     private int interval=0; //In seconds
+    private static Logger logger = Logger.getLogger("org.owasp.java.jaas.TimedLogin");
     
     protected synchronized Vector validateUser(String username, char password[]) throws LoginException {
         
@@ -52,7 +57,7 @@ public class TimedLogin extends DBLogin {
             else
                 con = DriverManager.getConnection(dbURL);
             
-            psu = con.prepareStatement("SELECT UserID,Password FROM " + userTable + " WHERE UserName=?");
+            psu = con.prepareStatement(loginQuery);
             
             psu.setString(1, username);
             rsu = psu.executeQuery();
@@ -80,15 +85,13 @@ public class TimedLogin extends DBLogin {
             }
             if (cryptPassword.equals(realPassword)) {
                 Vector p = new Vector();
+                logger.log(Level.FINE, "Adding user principal ("+username+")");
                 p.add(new TypedPrincipal(username, TypedPrincipal.USER));
-                psr = con.prepareStatement("SELECT " + roleTable + ".RoleName FROM " +
-                        roleMapTable + "," + roleTable +
-                        " WHERE " + roleMapTable + ".UserID=? AND " +
-                        roleMapTable + ".RoleID=" + roleTable + ".RoleID");
+                psr = con.prepareStatement(rolesQuery);
                 psr.setInt(1, uid);
                 rsr = psr.executeQuery();
                 while (rsr.next()) {
-                    p.add(new TypedPrincipal(rsr.getString(1), TypedPrincipal.GROUP));
+                    p.add(createRolePrincipal(rsr.getString(1), TypedPrincipal.GROUP));
                 }
                 updateSuccessfulLogin(con, uid);
                 return p;
@@ -100,13 +103,13 @@ public class TimedLogin extends DBLogin {
             }           
             
         } catch (ClassNotFoundException e) {
-            System.out.println("SQL ERROR 1");
+            System.out.println("SQL ERROR ClassNotFoundException");
             e.printStackTrace();
             throw new LoginException("Error reading database (" + e.getMessage() + ")");
         } catch (SQLException e) {
             System.out.println("SQL ERROR");
             e.printStackTrace();
-            throw new LoginException("Error reading database (" + e.getMessage() + ")");
+            throw new LoginException("Error reading database in validateUser (" + e.getMessage() + ")");
         } finally {
             try {
                 if (rsu != null) rsu.close();
@@ -118,6 +121,11 @@ public class TimedLogin extends DBLogin {
         }
     }
         
+    protected Principal createRolePrincipal(String name, int type) {
+        logger.log(Level.FINE, "Adding new TypedPrincipal as a role for "+name);
+        return new TypedPrincipal(name, type);
+    }
+    
     protected void updateFailedLogin(Connection con, int userID, int failedLogins) throws LoginException {
         PreparedStatement psu=null;
         failedLogins = failedLogins+1;
@@ -141,7 +149,8 @@ public class TimedLogin extends DBLogin {
             if (rows == 0) throw new LoginException("Error updating the "+loginTable+" with failed login details.");
             
         } catch (SQLException e) {
-            throw new LoginException("Error reading database (" + e.getMessage() + ")");
+            e.printStackTrace();
+            throw new LoginException("Error reading database during updateFailedLogin (" + e.getMessage() + ")");
         } finally {
             try {
                 if (psu != null) psu.close();
@@ -159,7 +168,8 @@ public class TimedLogin extends DBLogin {
             psu.setInt(3, userID);  
             psu.executeUpdate();            
         } catch (SQLException e) {
-            throw new LoginException("Error reading database (" + e.getMessage() + ")");
+            e.printStackTrace();
+            throw new LoginException("Error reading database during updateSuccessfulLogin (" + e.getMessage() + ")");
         } finally {
             try {
                 if (psu != null) psu.close();
@@ -170,9 +180,12 @@ public class TimedLogin extends DBLogin {
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         super.initialize(subject, callbackHandler, sharedState, options);
         
-        loginTable  = getOption("loginTable",    "login");
+        loginTable = getOption("loginTable", "login");
+        loginQuery  = getOption("loginQuery", "SELECT UserID,Password FROM Users WHERE UserName=?");
+        rolesQuery  = getOption("rolesQuery", "SELECT Roles.RoleName FROM Users_Roles,Roles WHERE Users_Roles.UserID=? AND Users_Roles.RoleID=Roles.RoleID");
         interval = getOption("interval",    180);
         clippingLevel = getOption("clippingLevel",    1);
+        if (debug) logger.setLevel(Level.FINE);
     }
     
     /** Creates a new instance of TimedLoginModule */

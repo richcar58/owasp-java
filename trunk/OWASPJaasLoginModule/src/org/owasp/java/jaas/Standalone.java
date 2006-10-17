@@ -61,6 +61,7 @@ public class Standalone {
 	System.out.println("User has " +
 			mySubject.getPublicCredentials().size() +
 			" Public Credential(s)");
+        
 
 	// now try to execute the SampleAction as the authenticated Subject
 	PrivilegedAction action = new SampleAction();

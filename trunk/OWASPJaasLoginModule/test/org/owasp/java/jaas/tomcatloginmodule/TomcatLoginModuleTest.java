@@ -5,7 +5,7 @@
  * Created on September 11, 2006, 10:59 PM
  */
 
-package org.owasp.java.jaas.loginmodule.test;
+package org.owasp.java.jaas.tomcatloginmodule;
 
 import com.tagish.auth.test.PasswordCallbackHandler;
 import java.io.FileInputStream;
@@ -30,7 +30,7 @@ import org.dbunit.operation.DatabaseOperation;
  *
  * @author stephen
  */
-public class LoginModuleTest extends DatabaseTestCase {
+public class TomcatLoginModuleTest extends DatabaseTestCase {
     //These values must match those in the login configuration file
     private final int clippingLevel=3;
     private final int interval = 10; //seconds
@@ -43,7 +43,7 @@ public class LoginModuleTest extends DatabaseTestCase {
     private final String dbUsername = "sa";
     private final String dbPassword = "";
     
-    public LoginModuleTest(String testName) {
+    public TomcatLoginModuleTest(String testName) {
         super(testName);
     }
     
@@ -75,8 +75,8 @@ public class LoginModuleTest extends DatabaseTestCase {
     public void testBadUsername() {
         try {
             
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler("noone", validPassword));
-            //LoginContext lc = new LoginContext("TimedLogin", new LoginCallbackHandler());
+            LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler("noone", validPassword));
+            //LoginContext lc = new LoginContext("TomcatTimedLogin", new LoginCallbackHandler());
             lc.login();
             fail("AccountNotFoundException was not thrown");
         } catch (AccountNotFoundException e) {
@@ -89,8 +89,8 @@ public class LoginModuleTest extends DatabaseTestCase {
     public void testBadPasswordOnce() {
         try {
             
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
-            //LoginContext lc = new LoginContext("TimedLogin", new LoginCallbackHandler());
+            LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
+            //LoginContext lc = new LoginContext("TomcatTimedLogin", new LoginCallbackHandler());
             lc.login();
             fail("Login should not have succeeded");
         } catch (FailedLoginException fle) {
@@ -103,7 +103,7 @@ public class LoginModuleTest extends DatabaseTestCase {
     public void testTimerActivated() {
         for (int i=1;i<6;i++){
             try {
-                LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
+                LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
                 
                 lc.login();
                 fail("Login should not have succeeded");
@@ -127,7 +127,7 @@ public class LoginModuleTest extends DatabaseTestCase {
         for (int i=1;i<=clippingLevel+1;i++){
             try {
                 now = new Date();
-                LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
+                LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
                 lc.login();
                 
                 fail("Login should not have succeeded");
@@ -155,7 +155,7 @@ public class LoginModuleTest extends DatabaseTestCase {
             assertEquals("Failed attempts not correct", clippingLevel, failedAttempts);
             //Now wait until the timeout passes so we can try again
             Thread.sleep(interval*1000);
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
+            LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
             lc.login();
             fail("Should have thrown a failed login exception");
         } catch (AccountLockedException fle) {
@@ -186,7 +186,7 @@ public class LoginModuleTest extends DatabaseTestCase {
         for (int i=1;i<=clippingLevel+1;i++){
             try {
                 
-                LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
+                LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, "badpassword"));
                 lc.login();
                 
                 fail("Login should not have succeeded");
@@ -201,7 +201,7 @@ public class LoginModuleTest extends DatabaseTestCase {
         try {
             Thread.sleep(interval*1000);
             now = new Date();
-            LoginContext lc = new LoginContext("TimedLogin", new PasswordCallbackHandler(validUsername, validPassword));
+            LoginContext lc = new LoginContext("TomcatTimedLogin", new PasswordCallbackHandler(validUsername, validPassword));
             lc.login();
             
             Class.forName(dbDriver);
@@ -234,9 +234,7 @@ public class LoginModuleTest extends DatabaseTestCase {
             } catch (Exception e) { }
         }
         
-    }
-    
-
+    }   
         
     
 }
